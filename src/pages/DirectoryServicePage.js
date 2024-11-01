@@ -2,12 +2,15 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, TextField, Button, CircularProgress, Card, CardContent, List, ListItem, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { Add, Call } from '@mui/icons-material';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 import api from '../api';
 
 function DirectoryServicePage() {
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [open, setOpen] = useState(false); // Управление диалогом добавления службы
+    const [open, setOpen] = useState(false);
     const [newService, setNewService] = useState({
         name: '',
         description: '',
@@ -75,12 +78,12 @@ function DirectoryServicePage() {
                     variant="contained"
                     startIcon={<Add />}
                     onClick={handleOpen}
-                    sx={{ borderRadius: 50, textTransform: 'none',  }}
+                    sx={{ borderRadius: 50, textTransform: 'none' }}
                 >
+                    Добавить службу
                 </Button>
             </Box>
 
-            {/* Диалог для добавления новой службы */}
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Добавить новую службу</DialogTitle>
                 <DialogContent>
@@ -134,7 +137,6 @@ function DirectoryServicePage() {
                 </DialogActions>
             </Dialog>
 
-            {/* Список служб с кнопкой "Позвонить" */}
             <Box>
                 <Typography variant="h6" gutterBottom>Список служб</Typography>
                 {services.length === 0 ? (
@@ -163,6 +165,28 @@ function DirectoryServicePage() {
                                         <Typography variant="body2" color="textSecondary">
                                             Телефон: {service.phone}
                                         </Typography>
+                                        <Box mt={2}>
+                                            <MapContainer
+                                                center={[43.238949, 76.889709]}
+                                                zoom={13}
+                                                style={{ height: "200px", width: "100%" }}
+                                            >
+                                                <TileLayer
+                                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                    attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+                                                />
+                                                <Marker
+                                                    position={[43.238949, 76.889709]}
+                                                    icon={new L.Icon({
+                                                        iconUrl: "https://leafletjs.com/examples/custom-icons/leaf-red.png",
+                                                        iconSize: [25, 41],
+                                                        iconAnchor: [12, 41]
+                                                    })}
+                                                >
+                                                    <Popup>{service.name}</Popup>
+                                                </Marker>
+                                            </MapContainer>
+                                        </Box>
                                     </CardContent>
                                 </Card>
                             </ListItem>
