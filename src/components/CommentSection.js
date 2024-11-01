@@ -28,11 +28,22 @@ function CommentSection({ eventId }) {
         };
         fetchCommentsAndProfile();
     }, [eventId]);
+    const addPoints = (pointsToAdd) => {
+        // Получаем текущее количество поинтов из localStorage
+        let currentPoints = parseInt(localStorage.getItem('points')) || 0; // Значение по умолчанию - 0
 
+        // Прибавляем новые поинты
+        currentPoints += pointsToAdd;
+
+        // Сохраняем обновлённое значение обратно в localStorage
+        localStorage.setItem('points', currentPoints);
+        alert(currentPoints)
+    };
     const handleCommentSubmit = async () => {
         try {
             const response = await api.post(`/events/${eventId}/comment`, { content: newComment });
             const { content, createdAt } = response.data;
+            addPoints(100)
             setComments([
                 ...comments,
                 {

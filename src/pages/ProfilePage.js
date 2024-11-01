@@ -8,6 +8,21 @@ import api from '../api';
 function ProfilePage() {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [points, setPoints] = useState(0);
+    const [rank, setRank] = useState("");
+
+    useEffect(() => {
+        const storedPoints = parseInt(localStorage.getItem('points')) || 0; // Значение по умолчанию
+        setPoints(storedPoints);
+        setRank(getRank(storedPoints));
+    }, []);
+
+    const getRank = (points) => {
+        if (points < 10) return "Новичок";
+        if (points < 20) return "Участник";
+        if (points < 30) return "Опытный";
+        return "Мастер";
+    };
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -27,6 +42,8 @@ function ProfilePage() {
 
     return (
         <Box sx={{ padding: 3 }}>
+
+
             <Box display="flex" justifyContent="space-between" flexDirection={"column"} gap={'24px'} alignItems="center" mb={3}>
                 <Typography variant="h4" fontWeight="bold">Личный кабинет</Typography>
                 <Button
@@ -45,7 +62,8 @@ function ProfilePage() {
                 <Box>
                     <Typography variant="h6">{profile.firstName} {profile.lastName}</Typography>
                     <Typography color="textSecondary">Телефон: {profile.phone}</Typography>
-                    <Typography color="textSecondary">Баллы: {profile.points}</Typography>
+                    <Typography color="textSecondary">Баллы: {points}</Typography>
+                    <Typography color="textSecondary">Звание: {rank}</Typography>
                 </Box>
             </Box>
 

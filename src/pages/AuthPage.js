@@ -1,6 +1,7 @@
 // src/pages/AuthPage.js
 import React, { useEffect, useState } from 'react';
 import { Box, Button, TextField, Typography, Paper, Chip } from '@mui/material';
+import InputMask from 'react-input-mask';
 import api, { setAuthToken } from '../api';
 
 function AuthPage({ setIsAuthenticated }) {
@@ -14,7 +15,6 @@ function AuthPage({ setIsAuthenticated }) {
     });
     const [availableInterests, setAvailableInterests] = useState([]); // Интересы с сервера
 
-    // Получение интересов с сервера при загрузке
     useEffect(() => {
         const fetchInterests = async () => {
             try {
@@ -29,7 +29,6 @@ function AuthPage({ setIsAuthenticated }) {
 
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    // Добавление или удаление интереса из выбранных
     const toggleInterest = (interest) => {
         setFormData((prevFormData) => ({
             ...prevFormData,
@@ -42,7 +41,8 @@ function AuthPage({ setIsAuthenticated }) {
     const handleAuth = async () => {
         try {
             const endpoint = authType === 'login' ? '/auth/login' : '/auth/register';
-            const response = await api.post(endpoint, formData);
+            const sanitizedData = { ...formData,             phone: formData.phone.replace(/\D/g, '').slice(1)   }; // Убираем все нечисловые символы из номера телефона
+            const response = await api.post(endpoint, sanitizedData);
             const { token } = response.data;
             setAuthToken(token);
             setIsAuthenticated(true);
@@ -62,7 +62,7 @@ function AuthPage({ setIsAuthenticated }) {
                 justifyContent: 'center',
                 height: '100vh',
                 padding: 4,
-                borderRadius: 3, // Закругленные края
+                borderRadius: 3,
                 backgroundColor: '#f5f5f5',
                 boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
             }}
@@ -76,7 +76,7 @@ function AuthPage({ setIsAuthenticated }) {
                         variant="contained"
                         onClick={() => setAuthType('login')}
                         sx={{
-                            borderRadius: 2, // Закругление кнопок
+                            borderRadius: 2,
                             fontWeight: 'bold',
                             textTransform: 'none',
                             px: 4,
@@ -132,22 +132,28 @@ function AuthPage({ setIsAuthenticated }) {
                                         clickable
                                         color={formData.interests.includes(interest) ? 'primary' : 'default'}
                                         onClick={() => toggleInterest(interest)}
-                                        sx={{ borderRadius: 1 }} // Скругление для интересов
+                                        sx={{ borderRadius: 1 }}
                                     />
                                 ))}
                             </Box>
                         </>
                     )}
-                    <TextField
-                        label="Телефон"
-                        name="phone"
+                    <InputMask
+                        mask="+7 999 999 99 99"
                         value={formData.phone}
                         onChange={handleChange}
-                        fullWidth
-                        margin="normal"
-                        variant="outlined"
-                        sx={{ borderRadius: 2 }}
-                    />
+                    >
+                        {() => (
+                            <TextField
+                                label="Телефон"
+                                name="phone"
+                                fullWidth
+                                margin="normal"
+                                variant="outlined"
+                                sx={{ borderRadius: 2 }}
+                            />
+                        )}
+                    </InputMask>
                     <TextField
                         label="Пароль"
                         name="password"

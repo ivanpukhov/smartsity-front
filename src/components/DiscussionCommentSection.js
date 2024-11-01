@@ -29,13 +29,23 @@ function DiscussionCommentSection({ discussionId }) {
         };
         fetchCommentsAndProfile();
     }, [discussionId]);
+    const addPoints = (pointsToAdd) => {
+        // Получаем текущее количество поинтов из localStorage
+        let currentPoints = parseInt(localStorage.getItem('points')) || 0; // Значение по умолчанию - 0
 
+        // Прибавляем новые поинты
+        currentPoints += pointsToAdd;
+
+        // Сохраняем обновлённое значение обратно в localStorage
+        localStorage.setItem('points', currentPoints);
+        alert(`Вам начисленно 10 баллов. Общее колличество ${currentPoints} баллов!`)
+    };
     const handleCommentSubmit = async () => {
         try {
             // Отправляем новый комментарий к обсуждению
             const response = await api.post(`/proposals/${discussionId}/comment`, { content: newComment });
             const { content, createdAt } = response.data;
-
+            addPoints(100)
             // Обновляем список комментариев
             setComments([
                 ...comments,
