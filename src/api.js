@@ -1,7 +1,7 @@
 // src/api.js
 import axios from 'axios';
 
-const API_URL = 'http://45.153.188.45:3001/api'; // Замените на URL вашего сервера
+const API_URL = 'https://nntnn.ru/api'; // Замените на URL вашего сервера
 
 // Настраиваем базовый URL для всех запросов
 const api = axios.create({
