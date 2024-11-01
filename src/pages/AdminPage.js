@@ -35,7 +35,7 @@ function AdminPage() {
                 ))}
             </List>
 
-            <Button component={Link} to="/emergency-alert" variant="contained" color="secondary" sx={{ mt: 2 }}>
+            <Button component={Link} to="/send-emergency-alert" variant="contained" color="secondary" sx={{ mt: 2 }}>
                 Отправить экстренное сообщение
             </Button>
         </Box>
