@@ -82,11 +82,13 @@ function EventsPage() {
                 ))}
             </Box>
             <EventList selectedTag={selectedTag} isAllEvents={isAllEvents} />
-            {!isAllEvents && (
-                <Button onClick={() => setIsAllEvents(true)} variant="outlined" sx={{ mt: 2 }}>
-                    Показать все мероприятия
-                </Button>
-            )}
+            <div style={{marginBottom: 100}}>
+                {!isAllEvents && (
+                    <Button onClick={() => setIsAllEvents(true)} variant="outlined" sx={{ mt: 2 }}>
+                        Показать все мероприятия
+                    </Button>
+                )}
+            </div>
 
             {/* Диалог для QR-сканера */}
             <Dialog open={qrOpen} onClose={() => setQrOpen(false)}>
